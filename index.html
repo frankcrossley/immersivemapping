@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+
+<html> 
+  
+  <head>
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"> </script>
+    <script src="./aframe-orbit-controls-component.js"></script>
+    <script src="./Cesium.js"></script>
+    <script src="./aframe-aterrain-component.js"></script>    
+    <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
+  </head>
+  
+  <style>
+    body { background:#101010; overflow:hidden;}
+  </style>
+
+  <body> 
+
+    <a-scene camera-transform-controls cursor="rayOrigin: mouse">
+
+    <a-assets>
+    <img id="sky" src="https://cdn.glitch.com/a56edd1f-4ae2-4283-8c0c-d89503810428%2FPIA12348_hires.jpg?1551770298611">
+    </a-assets>
+
+    <!-- note that even in vr use cases setting observer=camera should still work even though there's a parent cameraRig -->
+    <a-entity id="world" position="0 0 0" visible="true" a-terrain="radius:1000; observer:camera">
+    <a-entity a-location="lat:49.2827; lon:-123.1207; radius:1005;">
+    <a-entity rotation="-90 0 0">
+      
+    <a-gltf-model id="orca" scale="0.05 0.05 0.05" src="https://cdn.glitch.global/d186051e-682f-43ab-b275-885bcf885a23/orca.glb?v=1648178321685">
+    <a-animation attribute="rotation" dur="10000" from="0 0 0" to="0 360 0" easing="linear" repeat="indefinite">
+    </a-animation>
+    </a-gltf-model>
+  
+    </a-entity>
+    </a-entity>
+    </a-entity>
+      
+      <a-entity a-location="lat:49.3801; lon:-123.0815; radius:1010;">
+      <a-entity rotation="0 0 0">
+      <a-gltf-model scale="0.01 0.01 0.01" src="https://cdn.glitch.global/d186051e-682f-43ab-b275-885bcf885a23/bear.glb?v=1648178697986">
+      
+      </a-gltf-model>
+      </a-entity>
+      </a-entity>
+    
+
+
+    
+    <a-entity id="cameraRig">
+    <a-entity
+        id="camera"
+        camera="fov: 45; near:0.01; far:10000"
+        wasd-controls="fly:true" look-controls
+        position="0 1 5000"
+        orbit-controls="
+            autoRotate: false;
+            target: #world;
+            enableDamping: true;
+            dampingFactor: 0.125;
+            rotateSpeed:0.10;
+            minDistance:1000;
+            maxDistance:5000;
+            minPolarAngle:0.1;
+            maxPolarAngle:3.04159265359;
+            enableProportionalVelocity:true;
+        ">
+    </a-entity>
+    <a-entity id="lefthand" camera-transform-controls-hand="hand:left" vive-controls="hand: left" oculus-touch-controls="hand: left" windows-motion-controls="hand: left"></a-entity>
+    <a-entity id="righthand" camera-transform-controls-hand="hand:right" vive-controls="hand: right" oculus-touch-controls="hand: right" windows-motion-controls="hand: right"></a-entity>
+    </a-entity>
+
+    <!-- this turns out to be unwieldy
+    <a-entity id="environment" environment="playArea:100; xground: none; preset: starry; fog: 0"></a-entity>
+    -->
+
+    <!-- it's helpful to set the lighting ourselves -->
+    <a-entity light="type: directional; color: #EED; intensity: 3" position="-1 1 1"></a-entity>
+
+    <!-- this works but does require a large far distance for camera and that affects near field zbuffer depth -->
+    <a-sky src="#sky" radius="4000" color="#6EBAA7" ></a-sky>
+
+    </a-scene>
+    
+    
+    
+    
+  </body>
+  
+</html>
